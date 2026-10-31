@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LoanRisk - Loan Assessment</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<nav class="navbar"><div class="logo"><span>Loan</span>Risk</div><div class="nav-links"><a href="/" class="active">Home</a><a href="/applications">Applications</a></div></nav>
+<section class="hero-section"><div class="hero-content">
+<div class="hero-text"><div class="small-title">SMART LOAN ASSESSMENT</div><h1>Make smarter loan <span>decisions.</span></h1><p>Choose a loan type and evaluate eligibility and financial risk using a loan-specific rule-based intelligent system.</p>
+<div class="feature-row"><div class="feature"><div class="feature-icon">✓</div><div><strong>Loan-Specific Criteria</strong><small>Different rules for each loan</small></div></div><div class="feature"><div class="feature-icon">◆</div><div><strong>Risk Analysis</strong><small>Smart risk evaluation</small></div></div><div class="feature"><div class="feature-icon">▣</div><div><strong>Secure Records</strong><small>Application history</small></div></div></div></div>
+<div class="loan-card"><div class="card-heading"><div><h2>Loan Assessment</h2><p>Select the loan type and enter applicant information</p></div><div class="card-icon">₹</div></div>
+<form action="/check" method="POST">
+<div class="input-group"><label>Loan Type</label><select name="loan_type" id="loan_type" required onchange="showLoanFields()"><option value="personal">💼 Personal Loan</option><option value="home">🏠 Home Loan</option><option value="education">🎓 Education Loan</option><option value="agriculture">🌾 Agriculture Loan</option></select></div>
+<div class="input-row"><div class="input-group"><label>Applicant Name</label><input type="text" name="name" placeholder="Enter name" required></div><div class="input-group"><label>Age</label><input type="number" name="age" placeholder="Age" min="1" max="100" required></div></div>
+<div class="input-group"><label>Requested Loan Amount</label><div class="input-with-icon"><span>₹</span><input type="number" name="loan_amount" placeholder="Enter loan amount" min="1" required></div></div>
+
+<div id="home-fields" class="loan-specific hidden">
+<div class="section-label">🏠 Home Loan Details</div>
+<div class="input-group"><label>Monthly Income</label><div class="input-with-icon"><span>₹</span><input type="number" name="income" min="0" placeholder="Your monthly income" required></div></div>
+<div class="input-row"><div class="input-group"><label>Credit Score</label><input type="number" name="credit_score" min="0" max="900" placeholder="0 - 900" required></div><div class="input-group"><label>Existing Monthly EMI / Debt</label><div class="input-with-icon"><span>₹</span><input type="number" name="debt" min="0" placeholder="Existing EMI" required></div></div></div>
+<div class="input-row"><div class="input-group"><label>Property Value</label><div class="input-with-icon"><span>₹</span><input type="number" name="property_value" min="1" placeholder="Property value" required></div></div><div class="input-group"><label>Down Payment</label><div class="input-with-icon"><span>₹</span><input type="number" name="down_payment" min="0" placeholder="Down payment" required></div></div></div>
+</div>
+
+<div id="personal-fields" class="loan-specific">
+<div class="section-label">💼 Personal Loan Details</div>
+<div class="input-group"><label>Monthly Income</label><div class="input-with-icon"><span>₹</span><input type="number" name="income" min="0" placeholder="Your monthly income" required></div></div>
+<div class="input-group"><label>Employment Type</label><select name="employment" required><option value="salaried">Salaried</option><option value="self_employed">Self Employed</option><option value="student">Student</option><option value="unemployed">Unemployed</option></select></div>
+<div class="input-row"><div class="input-group"><label>Credit Score</label><input type="number" name="credit_score" min="0" max="900" placeholder="0 - 900" required></div><div class="input-group"><label>Existing Monthly EMI / Debt</label><div class="input-with-icon"><span>₹</span><input type="number" name="debt" min="0" placeholder="Existing EMI" required></div></div></div>
+</div>
+
+<div id="education-fields" class="loan-specific hidden">
+<div class="section-label">🎓 Education Loan Details</div>
+<div class="input-row"><div class="input-group"><label>Academic Score (%)</label><input type="number" name="academic_score" min="0" max="100" placeholder="e.g. 75" required></div><div class="input-group"><label>Co-applicant Monthly Income</label><div class="input-with-icon"><span>₹</span><input type="number" name="coapplicant_income" min="0" placeholder="Parent/guardian income" required></div></div></div>
+<div class="input-row"><div class="input-group"><label>Credit Score (Co-applicant)</label><input type="number" name="credit_score" min="0" max="900" placeholder="0 - 900" required></div><div class="input-group"><label>Education Level</label><select name="education_level" required><option value="">Select level</option><option>Undergraduate</option><option>Postgraduate</option><option>Professional</option></select></div></div>
+<div class="input-group"><label>Course / Programme</label><input type="text" name="course_type" placeholder="e.g. B.Tech Computer Science" required></div>
+</div>
+
+<div id="agriculture-fields" class="loan-specific hidden">
+<div class="section-label">🌾 Agriculture Loan Details</div>
+<div class="input-row"><div class="input-group"><label>Agricultural Income / Month</label><div class="input-with-icon"><span>₹</span><input type="number" name="agricultural_income" min="0" placeholder="Monthly farm income" required></div></div><div class="input-group"><label>Credit Score</label><input type="number" name="credit_score" min="0" max="900" placeholder="0 - 900" required></div></div>
+<div class="input-row"><div class="input-group"><label>Land Area (acres)</label><input type="number" name="land_area" min="0.01" step="0.01" placeholder="e.g. 2.5" required></div><div class="input-group"><label>Land Ownership</label><select name="land_ownership" required><option value="">Select</option><option value="owned">Owned</option><option value="leased">Leased</option></select></div></div>
+<div class="input-group"><label>Crop Type</label><input type="text" name="crop_type" placeholder="e.g. Paddy, Banana, Cotton" required></div>
+</div>
+<button type="submit" class="assessment-button">Check Loan Eligibility <span>→</span></button>
+</form></div></div></section>
+<section class="info-section"><div class="info-card"><div class="info-number">01</div><div><h3>Select Loan Type</h3><p>Choose Home, Education, Personal or Agriculture Loan.</p></div></div><div class="info-card"><div class="info-number">02</div><div><h3>Loan-Specific Analysis</h3><p>Prolog applies criteria specific to the selected loan.</p></div></div><div class="info-card"><div class="info-number">03</div><div><h3>Get Result</h3><p>View eligibility, risk level and decision reasons.</p></div></div></section>
+<footer class="footer"><strong>LoanRisk</strong><span>Loan Eligibility &amp; Risk Assessment System</span></footer>
+<script>
+function showLoanFields(){
+  const type=document.getElementById('loan_type').value;
+  document.querySelectorAll('.loan-specific').forEach(section=>{
+    const active=section.id===type+'-fields';
+    section.classList.toggle('hidden',!active);
+    section.querySelectorAll('input,select,textarea').forEach(field=>{
+      field.disabled=!active;
+      field.required=active;
+    });
+  });
+}
+document.getElementById('loan_type').addEventListener('change',showLoanFields);
+showLoanFields();
+</script>
+</body></html>
